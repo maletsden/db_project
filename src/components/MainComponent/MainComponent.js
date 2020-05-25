@@ -18,6 +18,7 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import Dashboard from "../Dashboard/Dashboard";
+import Friends from "../Friends/Friends";
 
 
 
@@ -143,19 +144,19 @@ export default function Main() {
       <main className={classes.content}>
 
         <RoterSwitch>
+
+          <Route path={`${match.url}/friends`}>
+            <Friends/>
+          </Route>
+          <Route path={`${match.url}/rent-a-friend`}>
+            <Dashboard/>
+          </Route>
+          <Route path={`${match.url}/statistics`}>
+            <Dashboard/>
+          </Route>
           <Route path={`${match.url}/`}>
             <Dashboard />
           </Route>
-          <Route path='/'>
-            <h1>hello</h1>
-          </Route>
-          {/*<Route path="/dashboard">*/}
-          {/*  <MainComponent />*/}
-          {/*</Route>*/}
-          {/*/!* TODO: change it <SingIn> *!/*/}
-          {/*<Route path="/">*/}
-          {/*  <MainComponent />*/}
-          {/*</Route>*/}
         </RoterSwitch>
       </main>
     </div>

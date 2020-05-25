@@ -19,17 +19,17 @@ const links = [
   {
     icon: <ShoppingCartIcon />,
     text: 'Rent a friend',
-    link: '/rent-a-friend'
+    link: '/dashboard/rent-a-friend'
   },
   {
     icon: <PeopleIcon />,
     text: 'Friends',
-    link: '/friends'
+    link: '/dashboard/friends'
   },
   {
     icon: <BarChartIcon />,
     text: 'Statistics',
-    link: '/statistics'
+    link: '/dashboard/statistics'
   }
 ];
 
@@ -45,36 +45,6 @@ export const mainListItems = (
         </ListItem>
       </Link>
     ))}
-    {/*<ListItem button>*/}
-    {/*  <ListItemIcon>*/}
-    {/*    <DashboardIcon />*/}
-    {/*  </ListItemIcon>*/}
-    {/*  <ListItemText primary="Main" />*/}
-    {/*</ListItem>*/}
-    {/*<ListItem button>*/}
-    {/*  <ListItemIcon>*/}
-    {/*    <ShoppingCartIcon />*/}
-    {/*  </ListItemIcon>*/}
-    {/*  <ListItemText primary="Rent a friend" />*/}
-    {/*</ListItem>*/}
-    {/*<ListItem button>*/}
-    {/*  <ListItemIcon>*/}
-    {/*    <PeopleIcon />*/}
-    {/*  </ListItemIcon>*/}
-    {/*  <ListItemText primary="Friends" />*/}
-    {/*</ListItem>*/}
-    {/*<ListItem button>*/}
-    {/*  <ListItemIcon>*/}
-    {/*    <BarChartIcon />*/}
-    {/*  </ListItemIcon>*/}
-    {/*  <ListItemText primary="Reports" />*/}
-    {/*</ListItem>*/}
-    {/*<ListItem button>*/}
-    {/*  <ListItemIcon>*/}
-    {/*    <LayersIcon />*/}
-    {/*  </ListItemIcon>*/}
-    {/*  <ListItemText primary="Integrations" />*/}
-    {/*</ListItem>*/}
   </div>
 );
 
