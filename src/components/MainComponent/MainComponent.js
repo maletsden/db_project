@@ -19,6 +19,7 @@ import {
 } from "react-router-dom";
 import Dashboard from "../Dashboard/Dashboard";
 import Friends from "../Friends/Friends";
+import RentAFriend from "../RentAFriend/RentAFriend";
 
 
 
@@ -149,7 +150,7 @@ export default function Main() {
             <Friends/>
           </Route>
           <Route path={`${match.url}/rent-a-friend`}>
-            <Dashboard/>
+            <RentAFriend/>
           </Route>
           <Route path={`${match.url}/statistics`}>
             <Dashboard/>
