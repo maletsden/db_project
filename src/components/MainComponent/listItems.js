@@ -36,7 +36,7 @@ const links = [
 export const mainListItems = (
   <div>
     {links.map((link, index) => (
-      <Link to={link.link} key={index}>
+      <Link to={link.link} key={index} style={{ textDecoration: 'none', color: 'inherit'}}>
         <ListItem button>
           <ListItemIcon>
             {link.icon}
