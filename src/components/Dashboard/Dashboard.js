@@ -6,9 +6,9 @@ import React from "react";
 import clsx from "clsx";
 import {makeStyles} from "@material-ui/core/styles";
 import Chart from "./Chart";
-import Deposits from "./Deposits";
-import Orders from "../Dashboard/Orders";
+import RecentActivities from "./RecentActivities";
 import Copyright from "../Copyright/Copyright";
+import TotalRentShower from "./TotalRentShower";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -47,13 +47,13 @@ export default function Dashboard() {
           {/* Recent Deposits */}
           <Grid item xs={12} md={4} lg={3}>
             <Paper className={fixedHeightPaper}>
-              <Deposits />
+              <TotalRentShower />
             </Paper>
           </Grid>
-          {/* Recent Orders */}
+          {/* Recent RecentActivities */}
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <Orders />
+              <RecentActivities />
             </Paper>
           </Grid>
         </Grid>
