@@ -14,6 +14,7 @@ import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import useTheme from "@material-ui/core/styles/useTheme";
 import InputLabel from "@material-ui/core/InputLabel";
+import {MenuProps, getSelectMenuItemsStyles} from "../../helpers/selectHelperFunctions";
 
 
 const giftsRows = [
@@ -58,17 +59,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 const clientsNames = [
   'Oliver Hansen',
   'Van Henry',
@@ -81,15 +71,6 @@ const clientsNames = [
   'Virginia Andrews',
   'Kelly Snyder',
 ];
-
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 
 export default function GiftsModal(props) {
   const classes = useStyles();
@@ -115,7 +96,9 @@ export default function GiftsModal(props) {
             <Paper className={classes.paper}>
               <Grid container justify={"space-between"}>
                 <Grid item xs={3}>
-                  <InputLabel id="client-select-label">Client</InputLabel>
+                  <InputLabel id="client-select-label" style={{
+                    fontSize: '12px'
+                  }}>Client</InputLabel>
                   <Select
                     labelId="client-select-label"
                     defaultValue={clientName}
@@ -124,7 +107,7 @@ export default function GiftsModal(props) {
                     MenuProps={MenuProps}
                   >
                     {clientsNames.map(name => (
-                      <MenuItem key={name} value={name} style={getStyles(name, clientsNames, theme)}>
+                      <MenuItem key={name} value={name} style={getSelectMenuItemsStyles(name, clientsNames, theme)}>
                         {name}
                       </MenuItem>
                     ))}
