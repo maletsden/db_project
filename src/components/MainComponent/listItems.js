@@ -2,6 +2,8 @@ import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -17,9 +19,14 @@ const links = [
     link: '/dashboard'
   },
   {
-    icon: <ShoppingCartIcon />,
+    icon: <PersonAddIcon />,
     text: 'Rent a friend',
     link: '/dashboard/rent-a-friend'
+  },
+  {
+    icon: <GroupAddIcon />,
+    text: 'Rent a group',
+    link: '/dashboard/rent-a-group'
   },
   {
     icon: <PeopleIcon />,
@@ -45,29 +52,5 @@ export const mainListItems = (
         </ListItem>
       </Link>
     ))}
-  </div>
-);
-
-export const secondaryListItems = (
-  <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItem>
   </div>
 );

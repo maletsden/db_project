@@ -20,6 +20,8 @@ import {
 import Dashboard from "../Dashboard/Dashboard";
 import Friends from "../Friends/Friends";
 import RentAFriend from "../RentAFriend/RentAFriend";
+import Statistics from "../Statistics/Statistics";
+import RentAGroup from "../RentAGroup/RentAGroup";
 
 
 
@@ -139,8 +141,6 @@ export default function Main() {
         </div>
         <Divider />
         <List>{mainListItems}</List>
-        <Divider />
-        <List>{secondaryListItems}</List>
       </Drawer>
       <main className={classes.content}>
 
@@ -152,8 +152,11 @@ export default function Main() {
           <Route path={`${match.url}/rent-a-friend`}>
             <RentAFriend/>
           </Route>
+          <Route path={`${match.url}/rent-a-group`}>
+            <RentAGroup/>
+          </Route>
           <Route path={`${match.url}/statistics`}>
-            <Dashboard/>
+            <Statistics/>
           </Route>
           <Route path={`${match.url}/`}>
             <Dashboard />
