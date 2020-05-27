@@ -33,6 +33,10 @@ export default function Dashboard() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  fetch('/test')
+    .then(response => response.json())
+    .then(data => console.log(data));
+
   return (
     <div>
       <div className={classes.appBarSpacer}/>
