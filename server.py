@@ -6,12 +6,10 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from db.sql_requests import *
 
-# db = "database=%s host=%s " % ("bank", "postgres", "postgres", "localhost")
-# schema = "schema.sql"
+
 db = "dbname=%s user=%s password=%s host=%s " % ("friends_rental", "postgres", "postgres", "localhost")
 conn = psycopg2.connect(db)
 cur = conn.cursor(cursor_factory=RealDictCursor)
-
 app = Flask(__name__, static_url_path='')
 
 
@@ -48,48 +46,48 @@ def send_ico(path):
 
 @app.route('/rent-friend', methods=['POST'])
 def rent_friend():
-    cur.execute(RENT_FRIEND, [request.args[s] for s in ("friend_id", "client_id", "date", "location_id")])
+    cur.execute(RENT_FRIEND, [request.values[s] for s in ("friend_id", "client_id", "date", "location_id")])
     return 0
 
 
 @app.route('/rent-group', methods=['POST'])
 def rent_group():
-    cur.execute(RENT_GROUP, [request.args[s] for s in ("friends_group_id", "holiday_id", "friends_number", "client_id", "location_id", "style", "equipment", "date")])
+    cur.execute(RENT_GROUP, [request.values[s] for s in ("friends_group_id", "holiday_id", "friends_number", "client_id", "location_id", "style", "equipment", "date")])
     return 0
 
 
 @app.route('/send-gift', methods=['POST'])
 def send_gift():
-    cur.execute(SEND_GIFT, [request.args[s] for s in ("gift_id", "client_id", "friend_id", "date")])
+    cur.execute(SEND_GIFT, [request.values[s] for s in ("gift_id", "client_id", "friend_id", "date")])
     return 0
 
 
 @app.route('/return-gift', methods=['POST'])
 def return_gift():
-    cur.execute(RETURN_GIFT, [request.args[s] for s in ("friend_id", "client_id", "gift_id", "gift_id")])
+    cur.execute(RETURN_GIFT, [request.values[s] for s in ("friend_id", "client_id", "gift_id", "gift_id")])
     return 0
 
 
 @app.route('/add-complaint', methods=['POST'])
 def add_complaint():
-    cur.execute(ADD_COMPLAINT, [request.args[s] for s in ("clients_group_id", "friend_id", "text", "date", "clients_number")])
+    cur.execute(ADD_COMPLAINT, [request.values[s] for s in ("clients_group_id", "friend_id", "text", "date", "clients_number")])
     return 0
 
 
 @app.route('/take-day-off', methods=['POST'])
 def take_day_off():
-    cur.execute(TAKE_DAY_OFF, [request.args[s] for s in ("friend_id", "date")])
+    cur.execute(TAKE_DAY_OFF, [request.values[s] for s in ("friend_id", "date")])
     return 0
 
 
 # requests
 
 # 1
-@app_route('/find-friends-of-client')
+@app.route('/find-friends-of-client')
 def find_friends_of_client():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_FRIENDS_OF_CLIENT, [request.args[s] for s in ('C', 'F', 'T', 'N')])
+        cur.execute(FIND_FRIENDS_OF_CLIENT, [request.values[s] for s in ('C', 'F', 'T', 'N')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
@@ -98,11 +96,11 @@ def find_friends_of_client():
 
 
 # 2
-@app_route('/find-clients-of-friend')
+@app.route('/find-clients-of-friend')
 def find_clients_of_friend():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_CLIENTS_OF_FRIEND, [request.args[s] for s in ('X', 'F', 'T', 'N')])
+        cur.execute(FIND_CLIENTS_OF_FRIEND, [request.values[s] for s in ('X', 'F', 'T', 'N')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
@@ -111,11 +109,11 @@ def find_clients_of_friend():
 
 
 # 3
-@app_route('/rented-parties-of-friend')
+@app.route('/rented-parties-of-friend')
 def rented_parties_of_friend():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(RENTED_PARTIES_OF_FRIEND, [request.args[s] for s in ('X', 'F', 'T', 'N')])
+        cur.execute(RENTED_PARTIES_OF_FRIEND, [request.values[s] for s in ('X', 'F', 'T', 'N')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
@@ -124,11 +122,11 @@ def rented_parties_of_friend():
 
 
 # 4
-@app_route('/find-all-clients-of-different-friends')
+@app.route('/find-all-clients-of-different-friends')
 def find_all_clients_of_different_friends():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_ALL_CLIENTS_OF_DIFFERENT_FRIENDS, [request.args[s] for s in ('F', 'T', 'N')])
+        cur.execute(FIND_ALL_CLIENTS_OF_DIFFERENT_FRIENDS, [request.values[s] for s in ('F', 'T', 'N')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
@@ -137,20 +135,20 @@ def find_all_clients_of_different_friends():
 
 
 # 5
-@app_route('/find-all-friends')
+@app.route('/find-all-friends')
 def find_all_friends():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_ALL_FRIENDS, [request.args[s] for s in ('F', 'T', 'N')])
+        cur.execute(FIND_ALL_FRIENDS, [request.values[s] for s in ('F', 'T', 'N')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
         print(e)
         return "Wrong query"
-''
+
 
 # 6
-@app_route('/find-total-count-of-dates')
+@app.route('/find-total-count-of-dates')
 def find_total_count_of_dates():
     try:
         cur.execute(CREATE_VIEW)
@@ -163,11 +161,11 @@ def find_total_count_of_dates():
 
 
 # 7
-@app_route('/find-count-of-dates-with-friends-of-friend')
+@app.route('/find-count-of-dates-with-friends-of-friend')
 def find_count_of_dates_with_friends_of_friend():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_COUNT_OF_DATES_WITH_FRIENDS_OF_FRIEND, [request.args[s] for s in ('F', 'T', 'N', 'X')])
+        cur.execute(FIND_COUNT_OF_DATES_WITH_FRIENDS_OF_FRIEND, [request.values[s] for s in ('F', 'T', 'N', 'X')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
@@ -176,7 +174,7 @@ def find_count_of_dates_with_friends_of_friend():
 
 
 # 8
-@app_route('/find-gift-from-client')
+@app.route('/find-gift-from-client')
 def find_gifts_from_client():
     try:
         cur.execute(CREATE_VIEW)
@@ -184,16 +182,16 @@ def find_gifts_from_client():
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
-        print(e)''
+        print(e)
         return "Wrong query"
 
 
 # 9
-@app_route('/find-friends-by-complaints')
+@app.route('/find-friends-by-complaints')
 def find_friends_by_complaints():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_FRIENDS_BY_COMPLAINTS, [request.args[s] for s in ('F', 'T', 'N')])
+        cur.execute(FIND_FRIENDS_BY_COMPLAINTS, [request.values[s] for s in ('F', 'T', 'N')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
@@ -202,7 +200,7 @@ def find_friends_by_complaints():
 
 
 # 10
-@app_route('/find-shared-events')
+@app.route('/find-shared-events')
 def find_shared_events():
     try:
         cur.execute(CREATE_VIEW)
@@ -215,11 +213,11 @@ def find_shared_events():
 
 
 # 11
-@app_route('/find-days-off-for-friends-of-client')
+@app.route('/find-days-off-for-friends-of-client')
 def find_days_off_for_friends_of_client():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_DAYS_OFF_FOR_FRIENDS, [request.args[s] for s in ('A', 'B')])
+        cur.execute(FIND_DAYS_OFF_FOR_FRIENDS, [request.values[s] for s in ('A', 'B')])
         results = cur.fetchall()
         for result in results:
             result['date'] = result['date'].strftime("%Y-%m-%d")
@@ -230,11 +228,11 @@ def find_days_off_for_friends_of_client():
 
 
 # 12
-@app_route('/find-average-number-of-clients-complained')
+@app.route('/find-average-number-of-clients-complained')
 def find_average_number_of_clients_complained():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_AVERAGE_NUMBER_OF_CLIENTS_COMPLAINED, [request.args[s] for s in ('X')])
+        cur.execute(FIND_AVERAGE_NUMBER_OF_CLIENTS_COMPLAINED, [request.values[s] for s in ('X')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
