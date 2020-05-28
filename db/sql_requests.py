@@ -46,7 +46,7 @@ GROUP BY celebrations.holiday_id"""
 # 8
 FIND_GIFTS_FROM_CLIENT = """ """
 # 9
-FIND_FRIENDS_BY_COMPLAINS = """SELECT friends.id, COUNT(CASE WHEN date >= (%s) AND date <= (%s) AND complaints.clients_number >= (%s) THEN 1 END) as num
+FIND_FRIENDS_BY_COMPLAINTS = """SELECT friends.id, COUNT(CASE WHEN date >= (%s) AND date <= (%s) AND complaints.clients_number >= (%s) THEN 1 END) as num
 FROM complaints RIGHT JOIN friends ON (friends.id = complaints.friend_id)
 GROUP BY friends.id
 ORDER BY num desc"""
@@ -62,3 +62,11 @@ FIND_AVERAGE_NUMBER_OF_CLIENTS_COMPLAINED = """SELECT EXTRACT(month FROM date) a
 FROM complaints
 WHERE friend_id = (%s)
 GROUP BY EXTRACT(month FROM date),  EXTRACT(year FROM date)"""
+
+
+RENT_FRIEND = """INSERT INTO appointments (friend_id, client_id, date, location_id) VALUES ((%s), (%s), (%s), (%s))"""
+RENT_GROUP = """INSERT INTO celebrations (friends_group_id, holiday_id, friends_number, client_id, location_id, style, equipment, date) VALUES ((%s), (%s), (%s), (%s), (%s), (%s), (%s), (%s))"""
+SEND_GIFT = """INSERT INTO gifted (gift_id, client_id, friend_id, date) VALUES ((%s), (%s), (%s), (%s))"""
+RETURN_GIFT = """DELETE FROM gifted WHERE friend_id = (%s) && client_id = (%s) && gift_id = (%s); UPDATE gifts SET returned=true WHERE gift_id = (%s)"""
+ADD_COMPLAINT = """INSERT INTO complaints (clients_group_id, friend_id, text, date, clients_number) VALUES ((%s), (%s), (%s), (%s))"""
+TAKE_DAY_OFF = """INSERT INTO day_off (friend_id, date) VALUES ((%s), (%s), (%s), (%s))"""
