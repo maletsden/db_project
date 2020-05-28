@@ -42,6 +42,77 @@ def send_ico(path):
     return send_from_directory(STATIC_FILES_DIR, path + '.ico')
 
 
+@app.route('/get-gifts')
+def get_gifts():
+    try:
+        cur.execute(GET_GIFTS)
+        results = cur.fetchall()
+        return json.dumps(results)
+    except Exception as e:
+        print(e)
+        return "Wrong query"
+
+
+@app.route('/get-friends')
+def get_friends():
+    try:
+        cur.execute(GET_FRIENDS)
+        results = cur.fetchall()
+        return json.dumps(results)
+    except Exception as e:
+        print(e)
+        return "Wrong query"
+
+
+@app.route('/get-clients')
+def get_clients():
+    try:
+        cur.execute(GET_CLIENTS)
+        results = cur.fetchall()
+        return json.dumps(results)
+    except Exception as e:
+        print(e)
+        return "Wrong query"
+
+
+@app.route('/get-friend-groups')
+def get_friend_groups():
+    try:
+        cur.execute(GET_FRIEND_GROUPS)
+        results = []
+        groups = {}
+        for row in cur.fetchall():
+            if str(row['group_id']) not in groups.keys():
+                groups[str(row['group_id'])] = [row['friend_id']]
+            else:
+                groups[str(row['group_id'])].append(row['friend_id'])
+        for key, value in groups.items():
+            results.append({"id": key, "friend_ids": value})
+        return json.dumps(results)
+    except Exception as e:
+        print(e)
+        return "Wrong query"
+
+
+@app.route('/get-client-groups')
+def get_client_groups():
+    try:
+        cur.execute(GET_CLIENT_GROUPS)
+        results = []
+        groups = {}
+        for row in cur.fetchall():
+            if str(row['group_id']) not in groups.keys():
+                groups[str(row['group_id'])] = [row['client_id']]
+            else:
+                groups[str(row['group_id'])].append(row['client_id'])
+        for key, value in groups.items():
+            results.append({"id": key, "client_ids": value})
+        return json.dumps(results)
+    except Exception as e:
+        print(e)
+        return "Wrong query"
+
+
 # events
 
 @app.route('/rent-friend', methods=['POST'])

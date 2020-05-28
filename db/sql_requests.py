@@ -70,3 +70,9 @@ SEND_GIFT = """INSERT INTO gifted (gift_id, client_id, friend_id, date) VALUES (
 RETURN_GIFT = """DELETE FROM gifted WHERE friend_id = (%s) && client_id = (%s) && gift_id = (%s); UPDATE gifts SET returned=true WHERE gift_id = (%s)"""
 ADD_COMPLAINT = """INSERT INTO complaints (clients_group_id, friend_id, text, date, clients_number) VALUES ((%s), (%s), (%s), (%s))"""
 TAKE_DAY_OFF = """INSERT INTO day_off (friend_id, date) VALUES ((%s), (%s), (%s), (%s))"""
+
+GET_GIFTS = """SELECT id, name FROM gifts;"""
+GET_FRIENDS = """SELECT id, full_name, phone_number, sex, age FROM friends;"""
+GET_CLIENTS = """SELECT id, full_name, phone_number FROM clients;"""
+GET_FRIEND_GROUPS = """SELECT group_id, friend_id FROM friends_groups;"""
+GET_CLIENT_GROUPS = """SELECT group_id, client_id FROM clients_groups;"""
