@@ -76,3 +76,5 @@ GET_FRIENDS = """SELECT id, full_name, phone_number, sex, age FROM friends;"""
 GET_CLIENTS = """SELECT id, full_name, phone_number FROM clients;"""
 GET_FRIEND_GROUPS = """SELECT group_id, friend_id FROM friends_groups;"""
 GET_CLIENT_GROUPS = """SELECT group_id, client_id FROM clients_groups;"""
+
+CHECK_PASSWORD = """SELECT password, 'client' as role FROM clients WHERE email=(%s) GROUP BY password UNION SELECT password, 'friend' as role FROM friends WHERE email=(%s) GROUP BY password UNION SELECT password, 'host' as role FROM hosts WHERE email=(%s) GROUP BY password;"""

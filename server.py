@@ -1,10 +1,11 @@
-from datetime import datetime
-import json
-from flask import Flask
 from flask import request, render_template, send_from_directory
-import psycopg2
 from psycopg2.extras import RealDictCursor
+from datetime import datetime
 from db.sql_requests import *
+from flask import Flask
+import psycopg2
+import hashlib
+import json
 
 
 db = "dbname=%s user=%s password=%s host=%s " % ("friends_rental", "postgres", "postgres", "localhost")
@@ -41,6 +42,23 @@ def send_png(path):
 def send_ico(path):
     return send_from_directory(STATIC_FILES_DIR, path + '.ico')
 
+
+@app.route('/verify-signin')
+def verify_signin():
+    email = request.values["email"]
+    password = request.values["password"]
+    h = hashlib.md5(password.encode())
+    hashed_password = h.hexdigest()
+    cur.execute(CHECK_PASSWORD, (email, email, email))
+    results = cur.fetchall()
+    print(results)
+    if len(results) > 0:
+        if hashed_password == results[0]["password"]:
+            return '{{"verify-signin": "{0}"}}'.format(results[0]["role"])
+        else:
+            return '{"verify-signin": "false"}'
+    else:
+        return '{"verify-signin": "false"}'
 
 @app.route('/get-gifts')
 def get_gifts():
