@@ -8,7 +8,7 @@ import hashlib
 import json
 
 
-db = "dbname=%s user=%s password=%s host=%s " % ("friends_rental", "postgres", "postgres", "localhost")
+db = "dbname=%s user=%s password=%s host=%s port=%s" % ("db2", "team2", "pass2word", "142.93.163.88", "6006")
 conn = psycopg2.connect(db)
 cur = conn.cursor(cursor_factory=RealDictCursor)
 app = Flask(__name__, static_url_path='')
