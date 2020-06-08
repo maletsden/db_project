@@ -11,12 +11,7 @@ import json
 db = "dbname=%s user=%s password=%s host=%s port=%s" % ("db2", "team2", "pass2word", "142.93.163.88", "6006")
 conn = psycopg2.connect(db)
 cur = conn.cursor(cursor_factory=RealDictCursor)
-app = Flask(__name__, static_url_path='')
-
-
-@app.route('/')
-def hello_world():
-    return render_template('index.html')
+app = Flask(__name__)
 
 
 # static files костиль
@@ -328,6 +323,11 @@ def find_average_number_of_clients_complained():
         print(e)
         return "Wrong query"
 
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run()
