@@ -17,12 +17,6 @@ app = Flask(__name__)
 # static files костиль
 STATIC_FILES_DIR = 'templates'
 
-
-@app.route('/static/<path:path>')
-def send_js(path):
-    return send_from_directory(STATIC_FILES_DIR + '/static', path)
-
-
 @app.route('/<path>.json')
 def send_all(path):
     return send_from_directory(STATIC_FILES_DIR, path + '.json')
@@ -38,7 +32,7 @@ def send_ico(path):
     return send_from_directory(STATIC_FILES_DIR, path + '.ico')
 
 
-@app.route('/verify-signin')
+@app.route('/verify-singin')
 def verify_signin():
     email = request.values["email"]
     password = request.values["password"]

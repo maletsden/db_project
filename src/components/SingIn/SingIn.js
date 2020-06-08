@@ -30,6 +30,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+async function login(event) {
+  console.log(event);
+  event.preventDefault();
+
+  const response = await fetch('/verify-singin');
+  const data = await response.json();
+
+  if (typeof data == "string") return false;
+
+  console.log(data);
+  return false;
+}
+
 export default function SignIn() {
   const classes = useStyles();
 
@@ -43,7 +56,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={e => e.preventDefault() && login() && false}>
           <TextField
             variant="outlined"
             margin="normal"
