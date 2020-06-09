@@ -8,7 +8,8 @@ import hashlib
 import json
 
 
-db = "dbname=%s user=%s password=%s host=%s port=%s" % ("db2", "team2", "pass2word", "142.93.163.88", "6006")
+# db = "dbname=%s user=%s password=%s host=%s port=%s" % ("db2", "team2", "pass2word", "142.93.163.88", "6006")
+db = "dbname=%s user=%s password=%s host=%s" % ("friends_rental", "postgres", "postgres", "localhost")
 conn = psycopg2.connect(db)
 cur = conn.cursor(cursor_factory=RealDictCursor)
 app = Flask(__name__)
@@ -171,7 +172,7 @@ def get_client_groups():
 
 # events
 
-@app.route('/rent-friend', methods=['POST'])
+@app.route('/rent-friend', methods=['GET', 'POST'])
 def rent_friend():
     cur.execute(RENT_FRIEND, [request.values[s] for s in ("friend_id", "client_id", "date", "location_id")])
     return 0
@@ -189,13 +190,11 @@ def send_gift():
     return 0
 
 
-@app.route('/return-gift', methods=['POST'])
+@app.route('/return-gift', methods=['GET', 'POST'])
 def return_gift():
     print([request.values[s] for s in ("friend_id", "client_id", "gift_id", "gift_id")])
     cur.execute(RETURN_GIFT, [request.values[s] for s in ("friend_id", "client_id", "gift_id", "gift_id")])
-    return {
-      'returned': True
-    }
+    return 'returned'
 
 
 @app.route('/add-complaint', methods=['POST'])
@@ -231,8 +230,9 @@ def find_friends_of_client():
 def find_clients_of_friend():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_CLIENTS_OF_FRIEND, [request.values[s] for s in ('X', 'F', 'T', 'N')])
+        cur.execute(FIND_CLIENTS_OF_FRIEND, tuple([request.values[s] for s in ('X', 'F', 'T', 'N')]))
         results = cur.fetchall()
+        print(results)
         return json.dumps(results)
     except Exception as e:
         print(e)

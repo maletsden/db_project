@@ -11,10 +11,10 @@ FIND_FRIENDS_OF_CLIENT = """SELECT friend_id
         GROUP BY friend_id
         HAVING COUNT(*) >= (%s)"""
 # 2
-FIND_CLIENTS_OF_FRIEND = """SELECT client_id
-FROM clients_friends -- INNER JOIN clients ON clients.id = clients_friends.friend_id
+FIND_CLIENTS_OF_FRIEND = """SELECT client_id, full_name, email, address, sex, phone_number
+FROM appointments INNER JOIN clients ON clients.id = appointments.client_id
 WHERE friend_id = (%s) AND date >= (%s) AND date <= (%s)
-GROUP BY client_id
+GROUP BY client_id, full_name, email, address, sex, phone_number
 HAVING COUNT(*) >= (%s)"""
 # 3
 RENTED_PARTIES_OF_FRIEND = """SELECT holiday_id
