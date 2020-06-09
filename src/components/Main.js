@@ -15,11 +15,20 @@ function App() {
         <Route path="/singin">
           <SingIn />
         </Route>
-        <Route path="/dashboard">
+        <Route path="/client/dashboard">
+          <MainComponent />
+        </Route>
+        <Route path="/client">
+          <MainComponent />
+        </Route>
+        <Route path="/friend/dashboard">
+          <MainComponent />
+        </Route>
+        <Route path="/friend">
           <MainComponent />
         </Route>
         <Route path="/">
-          <MainComponent />
+          <SingIn />
         </Route>
       </RoterSwitch>
 

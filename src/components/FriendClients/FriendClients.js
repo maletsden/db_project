@@ -7,6 +7,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import SendGiftsModal from "../SendGiftsModal/SendGiftsModal";
 import {getTodayDataFormatted} from '../../helpers/dataHelperFunctions';
+import {getUser} from "../../reducers";
+import {connect} from "react-redux";
 
 const friendsLabels = [
   'Full Name',
@@ -55,10 +57,30 @@ const friendsRows = [
 
 
 
-function Friends() {
+function FriendClients({user}) {
   const classes = useStyles();
   const [minMeetingsAmount, setMinMeetingsAmount] = React.useState(1);
   const [giftsModalOpen, setGiftsModalOpen] = React.useState(false);
+  const [clientsList, setClientsList] = React.useState(friendsRows);
+
+  const [fromDate, setFromDate] = React.useState(getTodayDataFormatted({changeMonth: -1}));
+  const [tillDate, setTillDate] = React.useState(getTodayDataFormatted({}));
+
+
+  fetch(`/get-clients?user-id=${user.id}`)
+    .then(response => response.json())
+    .then(clients => setClientsList(clients))
+    .catch(console.error);
+
+
+  function filterClients() {
+    fetch(
+      `/find-clients-of-friend?X=${user.id}&N=${minMeetingsAmount}&F=${fromDate}&T=${tillDate}`
+    )
+      .then(response => response.json())
+      .then(clients => setClientsList(clients))
+      .catch(console.error);
+  }
 
   return (
     <div>
@@ -77,18 +99,20 @@ function Friends() {
               <TextField
                 label="From date"
                 type="date"
-                defaultValue={getTodayDataFormatted({changeMonth: -1})}
+                value={fromDate}
+                onChange={event => setFromDate(event.target.value)}
               />
             </Grid>
             <Grid item xs={3}>
               <TextField
                 label="Till date"
                 type="date"
-                defaultValue={getTodayDataFormatted({})}
+                value={tillDate}
+                onChange={event => setTillDate(event.target.value)}
               />
             </Grid>
             <Grid item container xs={3} justify={"flex-end"} alignItems={"center"} >
-              <Button variant="outlined">
+              <Button variant="outlined" onClick={filterClients}>
                 Apply
               </Button>
             </Grid>
@@ -99,13 +123,7 @@ function Friends() {
 
       <Grid item xs={12}>
         <Paper className={classes.paper}>
-          <ListItems rows={friendsRows} labels={friendsLabels} col_keys={friendsColKeys} title="My Friends"
-                     actionElement={(
-                       <Button variant="outlined" onClick={() => setGiftsModalOpen(true)}>
-                         Present
-                       </Button>
-                     )}
-          />
+          <ListItems rows={clientsList} labels={friendsLabels} col_keys={friendsColKeys} title="My Clients"/>
         </Paper>
       </Grid>
 
@@ -114,4 +132,8 @@ function Friends() {
   );
 }
 
-export default Friends;
+const mapStateToProps = state => ({
+  user: getUser(state)
+});
+
+export default connect(mapStateToProps)(FriendClients);
