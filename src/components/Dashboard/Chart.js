@@ -48,7 +48,7 @@ function Chart({user}) {
 
   const [chartData, setChartData] = React.useState(data);
 
-  fetch(`/get-rents-by-last-12-month?user-id=${user.id}`)
+  fetch(`/get-rents-by-last-12-month?user_id=${user.id}`)
     .then(response => response.json())
     .then(list => setChartData(list))
     .catch(console.error);

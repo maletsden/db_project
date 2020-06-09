@@ -9,7 +9,7 @@ import {getUser} from "../../reducers/index";
 function TotalRentShower({user}) {
   const [totalRents, setTotalRents] = React.useState(0);
 
-  fetch(`/get-user-total-rents?user-id=${user.id}`)
+  fetch(`/get-user-total-rents?user_id=${user.id}`)
     .then(response => response.json())
     .then(rentsNum => setTotalRents(rentsNum))
     .catch(console.error);

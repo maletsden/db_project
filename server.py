@@ -48,18 +48,48 @@ def login():
     }
     if len(results) > 0 and hashed_password == results[0]["password"]:
         result["role"] = results[0]["role"]
-        # TODO: get id
-        result["id"] = None
-    return result
+        result["id"] = results[0]["id"]
+    return json.dumps(result)
 
-#TODO: /get-recent-activities
-#TODO: /get-user-total-rents
-#TODO: /get-rents-by-last-12-month
+
+@app.route('/get-recent-activities')
+def get_recent_activities():
+    try:
+        cur.execute(GET_RECENT_ACTIVITIES, request.values["user_id"])
+        results = cur.fetchall()
+        return json.dumps(results)
+    except Exception as e:
+        print(e)
+        return "Wrong query"
+
+@app.route('/get-user-total-rents')
+def get_user_total_rents():
+    try:
+        cur.execute(GET_USER_TOTAL_RENTS, request.values["user_id"])
+        results = cur.fetchall()
+        return json.dumps(results)
+    except Exception as e:
+        print(e)
+        return "Wrong query"
+
+@app.route('/get-rents-by-last-12-month')
+def get_rents_by_last_12_month():
+    try:
+        cur.execute(GET_RENTS_BY_LAST_12_MONTH, request.values["user_id"])
+        results = cur.fetchall()
+        return json.dumps(results)
+    except Exception as e:
+        print(e)
+        return "Wrong query"
+
 
 @app.route('/get-gifts')
 def get_gifts():
     try:
-        cur.execute(GET_GIFTS)
+        if "user_id" in request.values:
+            cur.execute(GET_GIFTS_BY_ID, request.values["user_id"])
+        else:
+            cur.execute(GET_GIFTS)
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
@@ -67,22 +97,27 @@ def get_gifts():
         return "Wrong query"
 
 
-#TODO: get friend by user id (need 2 variants)
 @app.route('/get-friends')
 def get_friends():
     try:
-        cur.execute(GET_FRIENDS)
+        if "user_id" in request.values:
+            cur.execute(GET_FRIENDS_BY_ID, request.values["user_id"])
+        else:
+            cur.execute(GET_FRIENDS)
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
         print(e)
         return "Wrong query"
 
-#TODO: get clients by user id (need 2 variants)
+
 @app.route('/get-clients')
 def get_clients():
     try:
-        cur.execute(GET_CLIENTS)
+        if "user_id" in request.values:
+            cur.execute(GET_CLIENTS_BY_ID, request.values["user_id"])
+        else:
+            cur.execute(GET_CLIENTS)
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
@@ -150,6 +185,7 @@ def send_gift():
 
 @app.route('/return-gift', methods=['POST'])
 def return_gift():
+    print([request.values[s] for s in ("friend_id", "client_id", "gift_id", "gift_id")])
     cur.execute(RETURN_GIFT, [request.values[s] for s in ("friend_id", "client_id", "gift_id", "gift_id")])
     return 0
 
@@ -265,7 +301,7 @@ def find_count_of_dates_with_friends_of_friend():
 def find_gifts_from_client():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_GIFTS_FROM_CLIENT, )
+        cur.execute(FIND_GIFTS_FROM_CLIENT, [request.values[s] for s in ('F', 'T', 'C', 'F', 'T')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:
@@ -286,13 +322,12 @@ def find_friends_by_complaints():
         return "Wrong query"
 
 
-#TODO: missing parameters
 # 10
 @app.route('/find-shared-events')
 def find_shared_events():
     try:
         cur.execute(CREATE_VIEW)
-        cur.execute(FIND_SHARED_EVENTS, )
+        cur.execute(FIND_SHARED_EVENTS, [request.values[s] for s in ('X', 'C', 'F', 'T')])
         results = cur.fetchall()
         return json.dumps(results)
     except Exception as e:

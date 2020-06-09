@@ -33,7 +33,7 @@ const celebrationsRows = [
 function RecentActivities({user}) {
   const [activitiesList, setActivitiesList] = React.useState(celebrationsRows);
 
-  fetch(`/get-recent-activities?user-id=${user.id}`)
+  fetch(`/get-recent-activities?user_id=${user.id}`)
     .then(response => response.json())
     .then(list => setActivitiesList(list))
     .catch(console.error);

@@ -55,7 +55,7 @@ function FriendGifts({user}) {
 
   const [giftsList, setGiftsList] = React.useState(giftsRows);
 
-  fetch(`/get-gifts?user-id=${user.id}`)
+  fetch(`/get-gifts?user_id=${user.id}`)
     .then(response => response.json())
     .then(list => setGiftsList(list))
     .catch(console.error);
