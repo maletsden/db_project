@@ -71,10 +71,10 @@ FROM day_off
 GROUP BY date
 HAVING COUNT(*) >= (%s) AND COUNT(*) <= (%s)"""
 # 12
-FIND_AVERAGE_NUMBER_OF_CLIENTS_COMPLAINED = """SELECT EXTRACT(month FROM date) as month,  EXTRACT(year FROM date) as year, ROUND(AVG(clients_number),2) as num
+FIND_AVERAGE_NUMBER_OF_CLIENTS_COMPLAINED = """SELECT CAST(EXTRACT(month FROM date) as integer) as month, CAST(ROUND(AVG(clients_number),2) as text) as num
 FROM complaints
 WHERE friend_id = (%s)
-GROUP BY EXTRACT(month FROM date),  EXTRACT(year FROM date)"""
+GROUP BY EXTRACT(month FROM date)"""
 
 
 RENT_FRIEND = """INSERT INTO appointments (friend_id, client_id, date, location_id) VALUES ((%s), (%s), (%s), (%s))"""

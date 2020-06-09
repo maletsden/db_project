@@ -8,8 +8,8 @@ import hashlib
 import json
 
 
-# db = "dbname=%s user=%s password=%s host=%s port=%s" % ("db2", "team2", "pass2word", "142.93.163.88", "6006")
-db = "dbname=%s user=%s password=%s host=%s" % ("friends_rental", "postgres", "postgres", "localhost")
+db = "dbname=%s user=%s password=%s host=%s port=%s" % ("db2", "team2", "pass2word", "142.93.163.88", "6006")
+# db = "dbname=%s user=%s password=%s host=%s" % ("friends_rental", "postgres", "postgres", "localhost")
 conn = psycopg2.connect(db)
 cur = conn.cursor(cursor_factory=RealDictCursor)
 app = Flask(__name__)
@@ -365,6 +365,7 @@ def find_average_number_of_clients_complained():
         cur.execute(CREATE_VIEW)
         cur.execute(FIND_AVERAGE_NUMBER_OF_CLIENTS_COMPLAINED, [request.values[s] for s in ('X')])
         results = cur.fetchall()
+        print(results)
         return json.dumps(results)
     except Exception as e:
         print(e)
