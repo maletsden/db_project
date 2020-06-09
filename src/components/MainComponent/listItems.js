@@ -40,11 +40,11 @@ const clientLinks = (rootPath => [
 ])('/client/dashboard');
 
 const friendLinks = (rootPath => [
-  {
-    icon: <DashboardIcon />,
-    text: 'Main',
-    link: `${rootPath}`
-  },
+  // {
+  //   icon: <TakeHoliday />,
+  //   text: 'Take holiday',
+  //   link: `${rootPath}`
+  // },
   {
     icon: <PeopleIcon />,
     text: 'Clients',

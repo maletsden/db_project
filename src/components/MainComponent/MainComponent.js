@@ -143,7 +143,7 @@ const getRoutes = url => [
 
   {
     path: `${url}/`,
-    component: <Dashboard/>
+    component: <Friends/>
   }
 ];
 

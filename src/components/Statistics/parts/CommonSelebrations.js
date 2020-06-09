@@ -88,15 +88,15 @@ export default function Commoncelebrations() {
   const [fromDate, setFromDate] = React.useState(getTodayDataFormatted({changeMonth: -1}));
   const [tillDate, setTillDate] = React.useState(getTodayDataFormatted({}));
 
-  fetch(`/get-clients`)
-    .then(response => response.json())
-    .then(clients => setClientsList(clients))
-    .catch(console.error);
-
-  fetch(`/get-friends`)
-    .then(response => response.json())
-    .then(friends => setFriendsList(friends))
-    .catch(console.error);
+  // fetch(`/get-clients`)
+  //   .then(response => response.json())
+  //   .then(clients => setClientsList(clients))
+  //   .catch(console.error);
+  //
+  // fetch(`/get-friends`)
+  //   .then(response => response.json())
+  //   .then(friends => setFriendsList(friends))
+  //   .catch(console.error);
 
 
   const [friendName, setFriendName] = React.useState(clientsList[0]);
@@ -104,10 +104,10 @@ export default function Commoncelebrations() {
 
 
   function filterCelebrations() {
-    fetch(`/find-shared-events?X=${user.id}&client_id=${minMeetingsAmount}&F=${fromDate}&T=${tillDate}`)
-      .then(response => response.json())
-      .then(clients => setClientsList(clients))
-      .catch(console.error);
+    // fetch(`/find-shared-events?X=${user.id}&client_id=${minMeetingsAmount}&F=${fromDate}&T=${tillDate}`)
+    //   .then(response => response.json())
+    //   .then(clients => setClientsList(clients))
+    //   .catch(console.error);
 
   }
   return (

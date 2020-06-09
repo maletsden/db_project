@@ -55,10 +55,13 @@ function FriendGifts({user}) {
 
   const [giftsList, setGiftsList] = React.useState(giftsRows);
 
-  fetch(`/get-gifts?user_id=${user.id}`)
-    .then(response => response.json())
-    .then(list => setGiftsList(list))
-    .catch(console.error);
+  React.useEffect(() => {
+    fetch(`/get-gifts?user_id=${user.id}`)
+      .then(response => response.json())
+      .then(list => setGiftsList(list))
+      .catch(console.error);
+  }, []);
+
 
   function returnGift(event) {
     const rowIndex = +event.target.parentNode.parentNode.attributes._row_index.value;
@@ -69,7 +72,14 @@ function FriendGifts({user}) {
       method: 'POST'
     })
       .then(response => response.json())
-      .then(list => setGiftsList(list))
+      .then(res => {
+        if (res.returned) {
+          setGiftsList(
+            giftsList.filter((_, index) => index !== rowIndex)
+          );
+        }
+
+      })
       .catch(console.error);
   }
 

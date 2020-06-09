@@ -52,6 +52,7 @@ class SignIn extends React.Component {
   updateEmail(email) {
     this.setState({
       ...this.state,
+      error: false,
       email
     });
   }
@@ -59,6 +60,7 @@ class SignIn extends React.Component {
   updatePassword(password) {
     this.setState({
       ...this.state,
+      error: false,
       password
     });
   }
@@ -69,9 +71,10 @@ class SignIn extends React.Component {
       id: 0
     };
 
-    // fetch(`/login?email=${this.state.email}&password=${this.state.password}`)
-    //   .then(response => response.json())
-    //   .then(data => {
+    fetch(`/login?email=${this.state.email}&password=${this.state.password}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
         if (!data.role) {
           this.setState({
             ...this.state,
@@ -82,8 +85,8 @@ class SignIn extends React.Component {
           const { history } = this.props;
           if (history) history.push(`${data.role}/dashboard`);
         }
-      // })
-      // .catch(console.error);
+      })
+      .catch(console.error);
   }
 
   render() {
@@ -110,6 +113,7 @@ class SignIn extends React.Component {
               name="email"
               autoComplete="email"
               autoFocus
+              error={this.state.error}
               value={this.state.email}
               onChange={event => this.updateEmail(event.target.value)}
             />
@@ -123,6 +127,7 @@ class SignIn extends React.Component {
               type="password"
               id="password"
               autoComplete="current-password"
+              error={this.state.error}
               value={this.state.password}
               onChange={event => this.updatePassword(event.target.value)}
             />

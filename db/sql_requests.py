@@ -89,13 +89,13 @@ GET_GIFTS_BY_ID = """SELECT gifts.id as id, gifts.name as name, gifts.price as p
 GET_FRIENDS = """SELECT id, full_name, phone_number, sex, age FROM friends;"""
 GET_FRIENDS_BY_ID = """SELECT friends.id as id, full_name, phone_number, sex, age, date, location_id FROM friends INNER JOIN appointments ON appointments.friend_id = friends.id WHERE appointments.client_id = (%s);"""
 GET_CLIENTS = """SELECT id, full_name, phone_number FROM clients;"""
-GET_CLIENTS_BY_ID = """SELECT clients.id as id, full_name, phone_number, date, location_id FROM clients INNER JOIN appointments ON appointments.client_id = clients.id WHERE appointments.friend_id = (%s);"""
+GET_CLIENTS_BY_ID = """SELECT clients.id as id, full_name, email, address, sex, phone_number FROM clients INNER JOIN appointments ON appointments.client_id = clients.id WHERE appointments.friend_id = (%s);"""
 GET_FRIEND_GROUPS = """SELECT group_id, friend_id FROM friends_groups;"""
 GET_CLIENT_GROUPS = """SELECT group_id, client_id FROM clients_groups;"""
 
 CHECK_PASSWORD = """SELECT id, password, 'client' as role FROM clients WHERE email=(%s) GROUP BY id, password UNION SELECT id, password, 'friend' as role FROM friends WHERE email=(%s) GROUP BY id, password UNION SELECT id, password, 'host' as role FROM hosts WHERE email=(%s) GROUP BY id, password;"""
 
 
-GET_RECENT_ACTIVITIES = """SELECT holiday_id, addresss, location, style, date FROM celebrations WHERE client_id=(%s);"""
-GET_USER_TOTAL_RENTS = """SELECT friend_id, addresss, location, date FROM appoinments WHERE client_id=(%s);"""
-GET_RENTS_BY_LAST_12_MONTH = """SELECT friend_id, addresss, location, date FROM appoinments WHERE client_id=(%s) ORDER BY date desc LIMIT 5;"""
+GET_RECENT_ACTIVITIES = """SELECT holiday_id, location_id, style, date FROM celebrations WHERE client_id=(%s);"""
+GET_USER_TOTAL_RENTS = """SELECT friend_id, addresss, location, date FROM appointments WHERE client_id=(%s);"""
+GET_RENTS_BY_LAST_12_MONTH = """SELECT friend_id, addresss, location, date FROM appointments WHERE client_id=(%s) ORDER BY date desc LIMIT 5;"""

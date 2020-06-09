@@ -77,7 +77,11 @@ def get_rents_by_last_12_month():
     try:
         cur.execute(GET_RENTS_BY_LAST_12_MONTH, request.values["user_id"])
         results = cur.fetchall()
-        return json.dumps(results)
+        print(dict(results))
+        print([dict(result) for result in results])
+        print(json.dumps(results))
+        return json.dumps([{'a': 1}])
+        #return json.dumps(results)
     except Exception as e:
         print(e)
         return "Wrong query"
@@ -119,8 +123,10 @@ def get_clients():
         else:
             cur.execute(GET_CLIENTS)
         results = cur.fetchall()
+        print(results)
         return json.dumps(results)
     except Exception as e:
+        print("error")
         print(e)
         return "Wrong query"
 
@@ -187,7 +193,9 @@ def send_gift():
 def return_gift():
     print([request.values[s] for s in ("friend_id", "client_id", "gift_id", "gift_id")])
     cur.execute(RETURN_GIFT, [request.values[s] for s in ("friend_id", "client_id", "gift_id", "gift_id")])
-    return 0
+    return {
+      'returned': True
+    }
 
 
 @app.route('/add-complaint', methods=['POST'])

@@ -57,8 +57,8 @@ const clientsNames = [
   createClientsData(4, 'Omar Alexander')
 ];
 
-function createClientsData(id, name) {
-  return {id, name};
+function createClientsData(id, full_name) {
+  return {id, full_name};
 }
 
 
@@ -71,10 +71,16 @@ export default function AvgClientAmountInComplainForFriend() {
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  fetch(`/get-clients`)
-    .then(response => response.json())
-    .then(clients => setClientsList(clients))
-    .catch(console.error);
+  React.useEffect(() => {
+    fetch(`/get-clients`)
+      .then(response => response.json())
+      .then(clients => {
+        setClientsList(clients);
+        setClientName(clients[0]);
+      })
+      .catch(console.error);
+  }, []);
+
 
   function updateChart() {
     fetch(`/find-average-number-of-clients-complained?X=${clientName}`)
@@ -138,9 +144,9 @@ export default function AvgClientAmountInComplainForFriend() {
                     input={<Input/>}
                     MenuProps={MenuProps}
                   >
-                    {clientsList.map(({name}) => (
-                      <MenuItem key={name} value={name} style={getSelectMenuItemsStyles(name, clientsList, theme)}>
-                        {name}
+                    {clientsList.map(({full_name, id}) => (
+                      <MenuItem key={full_name} value={id} style={getSelectMenuItemsStyles(full_name, clientsList, theme)}>
+                        {full_name}
                       </MenuItem>
                     ))}
                   </Select>

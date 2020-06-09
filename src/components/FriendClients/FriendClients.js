@@ -67,10 +67,14 @@ function FriendClients({user}) {
   const [tillDate, setTillDate] = React.useState(getTodayDataFormatted({}));
 
 
-  fetch(`/get-clients?user-id=${user.id}`)
-    .then(response => response.json())
-    .then(clients => setClientsList(clients))
-    .catch(console.error);
+  React.useEffect(() => {
+    fetch(`/get-clients?user_id=${user.id}`)
+      .then(response => response.json())
+      .then(clients => {
+        setClientsList(clients)
+      })
+      .catch(console.error);
+  }, []);
 
 
   function filterClients() {
