@@ -61,6 +61,12 @@ function createClientsData(id, full_name) {
   return {id, full_name};
 }
 
+const monthNumToName = [
+  'January', 'February', 'March',
+  'April', 'May', 'June', 'July',
+  'August', 'September', 'October',
+  'November', 'December'
+];
 
 export default function AvgClientAmountInComplainForFriend() {
   const theme = useTheme();
@@ -70,6 +76,7 @@ export default function AvgClientAmountInComplainForFriend() {
   const [chartData, setChartData] = React.useState(data);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
 
   React.useEffect(() => {
     fetch(`/get-clients`)
@@ -85,7 +92,15 @@ export default function AvgClientAmountInComplainForFriend() {
   function updateChart() {
     fetch(`/find-average-number-of-clients-complained?X=${clientName}`)
       .then(response => response.json())
-      .then(data => setChartData(data))
+      .then(data => {
+        let newCharData = monthNumToName.map(
+          monthName => createData(monthName, 0)
+        );
+        for (const row of data) {
+          newCharData[row.month].amount = row.num;
+        }
+        setChartData(newCharData);
+      })
       .catch(console.error);
   }
 
@@ -139,13 +154,14 @@ export default function AvgClientAmountInComplainForFriend() {
                 <Box ml={2}>
                   <Select
                     labelId="client-select-label"
-                    defaultValue={clientName.name}
+                    defaultValue={clientName.full_name}
                     onChange={event => setClientName(event.target.value)}
                     input={<Input/>}
                     MenuProps={MenuProps}
                   >
                     {clientsList.map(({full_name, id}) => (
-                      <MenuItem key={full_name} value={id} style={getSelectMenuItemsStyles(full_name, clientsList, theme)}>
+                      <MenuItem key={full_name} value={id}
+                                style={getSelectMenuItemsStyles(full_name, clientsList, theme)}>
                         {full_name}
                       </MenuItem>
                     ))}

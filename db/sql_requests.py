@@ -66,15 +66,15 @@ FIND_SHARED_EVENTS = """SELECT celebrations.id
 FROM friends_groups INNER JOIN celebrations ON (friends_groups.group_id = celebrations.friends_group_id)
 WHERE friends_groups.friend_id = (%s) AND celebrations.client_id = (%s) AND celebrations.date >= (%s) AND celebrations.date <= (%s)"""
 # 11
-FIND_DAYS_OFF_FOR_FRIENDS = """SELECT date, COUNT(*) as num
+FIND_DAYS_OFF_FOR_FRIENDS = """SELECT date, COUNT(*) as number
 FROM day_off
 GROUP BY date
 HAVING COUNT(*) >= (%s) AND COUNT(*) <= (%s)"""
 # 12
-FIND_AVERAGE_NUMBER_OF_CLIENTS_COMPLAINED = """SELECT EXTRACT(month FROM date) as month,  EXTRACT(year FROM date) as year, ROUND(AVG(clients_number),2) as num
+FIND_AVERAGE_NUMBER_OF_CLIENTS_COMPLAINED = """SELECT CAST(EXTRACT(month FROM date) as integer) as month, CAST(ROUND(AVG(clients_number),2) as text) as num
 FROM complaints
 WHERE friend_id = (%s)
-GROUP BY EXTRACT(month FROM date),  EXTRACT(year FROM date)"""
+GROUP BY EXTRACT(month FROM date)"""
 
 
 RENT_FRIEND = """INSERT INTO appointments (friend_id, client_id, date, location_id) VALUES ((%s), (%s), (%s), (%s))"""

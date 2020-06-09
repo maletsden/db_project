@@ -348,7 +348,6 @@ def find_shared_events():
 @app.route('/find-days-off-for-friends-of-client')
 def find_days_off_for_friends_of_client():
     try:
-        cur.execute(CREATE_VIEW)
         cur.execute(FIND_DAYS_OFF_FOR_FRIENDS, [request.values[s] for s in ('A', 'B')])
         results = cur.fetchall()
         for result in results:
@@ -366,6 +365,7 @@ def find_average_number_of_clients_complained():
         cur.execute(CREATE_VIEW)
         cur.execute(FIND_AVERAGE_NUMBER_OF_CLIENTS_COMPLAINED, [request.values[s] for s in ('X')])
         results = cur.fetchall()
+        print(results)
         return json.dumps(results)
     except Exception as e:
         print(e)
