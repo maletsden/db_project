@@ -2,6 +2,8 @@ import React from 'react';
 import {useTheme} from '@material-ui/core/styles';
 import {LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer} from 'recharts';
 import Title from '../MainComponent/Title';
+import {getUser} from "../../reducers";
+import {connect} from "react-redux";
 
 // Generate Sales Data
 function createData(month, amount) {
@@ -41,15 +43,22 @@ const data = [
   createData('December', 123),
 ];
 
-export default function Chart() {
+function Chart({user}) {
   const theme = useTheme();
+
+  const [chartData, setChartData] = React.useState(data);
+
+  fetch(`/get-rents-by-last-12-month?user-id=${user.id}`)
+    .then(response => response.json())
+    .then(list => setChartData(list))
+    .catch(console.error);
 
   return (
     <React.Fragment>
       <Title>Total rents by last 12 months</Title>
       <ResponsiveContainer>
         <LineChart
-          data={data}
+          data={chartData}
           margin={{
             top: 16,
             right: 16,
@@ -73,3 +82,9 @@ export default function Chart() {
     </React.Fragment>
   );
 }
+
+const mapStateToProps = state => ({
+  user: getUser(state)
+});
+
+export default connect(mapStateToProps)(Chart);

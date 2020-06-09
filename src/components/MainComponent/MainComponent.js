@@ -10,7 +10,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
-import {mainListItems, secondaryListItems} from "./listItems";
+import {
+  mainClientListItems,
+  mainFriendListItems
+} from "./listItems";
 import Drawer from "@material-ui/core/Drawer";
 import {
   Route,
@@ -22,6 +25,8 @@ import Friends from "../Friends/Friends";
 import RentAFriend from "../RentAFriend/RentAFriend";
 import Statistics from "../Statistics/Statistics";
 import RentAGroup from "../RentAGroup/RentAGroup";
+import FriendGifts from "../FriendGifts/FriendGifts";
+import FriendClients from "../FriendClients/FriendClients";
 
 
 
@@ -92,28 +97,77 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const userRole = 'Client';
+function getRole(url) {
+  return url.indexOf('/', 1) !== -1 ? url.slice(1, url.indexOf('/', 1)) : url;
+}
+
+function getRoleText(role) {
+  return ({
+    client: 'Client',
+    friend: 'Friend'
+  })[role];
+}
+
+function getMenuList(role) {
+  return ({
+    client: mainClientListItems,
+    friend: mainFriendListItems
+  })[role];
+}
+
+const getRoutes = url => [
+  {
+    path: `${url}/friends`,
+    component: <Friends/>
+  },
+  {
+    path: `${url}/rent-a-friend`,
+    component: <RentAFriend/>
+  },
+  {
+    path: `${url}/rent-a-group`,
+    component: <RentAGroup/>
+  },
+  {
+    path: `${url}/statistics`,
+    component: <Statistics/>
+  },
+  {
+    path: `${url}/gifts`,
+    component: <FriendGifts/>
+  },
+  {
+    path: `${url}/clients`,
+    component: <FriendClients/>
+  },
+
+  {
+    path: `${url}/`,
+    component: <Dashboard/>
+  }
+];
+
+
 export default function Main() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-  let match = useRouteMatch();
+  const [drawerOpen, setDrawerOpen] = React.useState(true);
+  const match = useRouteMatch();
+
+  const userRole = getRole(match.url);
+  const userRoleText = getRoleText(userRole);
+
+  const routes = getRoutes(match.url);
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+      <AppBar position="absolute" className={clsx(classes.appBar, drawerOpen && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+            onClick={() => setDrawerOpen(true)}
+            className={clsx(classes.menuButton, drawerOpen && classes.menuButtonHidden)}
           >
             <MenuIcon />
           </IconButton>
@@ -126,41 +180,32 @@ export default function Main() {
       <Drawer
         variant="permanent"
         classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          paper: clsx(classes.drawerPaper, !drawerOpen && classes.drawerPaperClose),
         }}
-        open={open}
+        open={drawerOpen}
       >
         <div className={classes.toolbarIcon}>
           <Typography>
-            Hi, {userRole}
+            Hi, {userRoleText}
           </Typography>
 
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={() => setDrawerOpen(false)}>
             <ChevronLeftIcon />
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List>{getMenuList(userRole)}</List>
       </Drawer>
       <main className={classes.content}>
 
         <RoterSwitch>
-
-          <Route path={`${match.url}/friends`}>
-            <Friends/>
-          </Route>
-          <Route path={`${match.url}/rent-a-friend`}>
-            <RentAFriend/>
-          </Route>
-          <Route path={`${match.url}/rent-a-group`}>
-            <RentAGroup/>
-          </Route>
-          <Route path={`${match.url}/statistics`}>
-            <Statistics/>
-          </Route>
-          <Route path={`${match.url}/`}>
-            <Dashboard />
-          </Route>
+          {
+            routes.map((route, index) => (
+              <Route path={route.path} key={index}>
+                {route.component}
+              </Route>
+            ))
+          }
         </RoterSwitch>
       </main>
     </div>

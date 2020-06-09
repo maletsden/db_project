@@ -1,46 +1,70 @@
 import React from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import {Link} from "react-router-dom";
-
-const links = [
+import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
+const clientLinks = (rootPath => [
   {
     icon: <DashboardIcon />,
     text: 'Main',
-    link: '/dashboard'
+    link: `${rootPath}/statistics`
   },
   {
     icon: <PersonAddIcon />,
     text: 'Rent a friend',
-    link: '/dashboard/rent-a-friend'
+    link: `${rootPath}/rent-a-friend`
   },
   {
     icon: <GroupAddIcon />,
     text: 'Rent a group',
-    link: '/dashboard/rent-a-group'
+    link: `${rootPath}/rent-a-group`
   },
   {
     icon: <PeopleIcon />,
     text: 'Friends',
-    link: '/dashboard/friends'
+    link: `${rootPath}/friends`
   },
   {
     icon: <BarChartIcon />,
     text: 'Statistics',
-    link: '/dashboard/statistics'
+    link: `${rootPath}/statistics`
   }
-];
+])('/client/dashboard');
 
-export const mainListItems = (
+const friendLinks = (rootPath => [
+  {
+    icon: <DashboardIcon />,
+    text: 'Main',
+    link: `${rootPath}`
+  },
+  {
+    icon: <PeopleIcon />,
+    text: 'Clients',
+    link: `${rootPath}/clients`
+  },
+  {
+    icon: <CardGiftcardIcon />,
+    text: 'Gifts',
+    link: `${rootPath}/gifts`
+  },
+  {
+    icon: <BarChartIcon />,
+    text: 'Statistics',
+    link: `${rootPath}/statistics`
+  }
+])('/friend/dashboard');
+
+
+
+const listItems = (links) => (
   <div>
     {links.map((link, index) => (
       <Link to={link.link} key={index} style={{ textDecoration: 'none', color: 'inherit'}}>
@@ -54,3 +78,6 @@ export const mainListItems = (
     ))}
   </div>
 );
+export const mainClientListItems = listItems(clientLinks);
+
+export const mainFriendListItems = listItems(friendLinks);

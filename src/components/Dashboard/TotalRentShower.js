@@ -2,10 +2,18 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Title from '../MainComponent/Title';
 import {getTodayStandard} from "../../helpers/dataHelperFunctions";
+import {connect} from "react-redux";
+import {getUser} from "../../reducers/index";
 
 
-const totalRents = 454323;
-export default function TotalRentShower() {
+function TotalRentShower({user}) {
+  const [totalRents, setTotalRents] = React.useState(0);
+
+  fetch(`/get-user-total-rents?user-id=${user.id}`)
+    .then(response => response.json())
+    .then(rentsNum => setTotalRents(rentsNum))
+    .catch(console.error);
+
   return (
     <React.Fragment>
       <Title>Total Rents</Title>
@@ -18,3 +26,9 @@ export default function TotalRentShower() {
     </React.Fragment>
   );
 }
+
+const mapStateToProps = state => ({
+  user: getUser(state)
+});
+
+export default connect(mapStateToProps)(TotalRentShower);

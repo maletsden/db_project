@@ -1,24 +1,18 @@
-import {makeStyles, useTheme} from "@material-ui/core/styles";
 import React from "react";
+import {makeStyles, useTheme} from "@material-ui/core/styles";
 import Title from "../../MainComponent/Title";
 import {Label, Line, LineChart, ResponsiveContainer, XAxis, YAxis} from "recharts";
 import clsx from "clsx";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import Chart from "../../Dashboard/Chart";
-import Deposits from "../../Dashboard/TotalRentShower";
-import RecentActivities from "../../Dashboard/RecentActivities";
-import Box from "@material-ui/core/Box";
-import Copyright from "../../Copyright/Copyright";
-import Container from "@material-ui/core/Container";
-import TextField from "@material-ui/core/TextField";
-import {getTodayDataFormatted} from "../../../helpers/dataHelperFunctions";
-import Button from "@material-ui/core/Button";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
+import {
+  Paper,
+  Grid,
+  Box,
+  Container,
+  Button,
+  Select,
+  Input,
+  MenuItem
+} from "@material-ui/core";
 import {getSelectMenuItemsStyles, MenuProps} from "../../../helpers/selectHelperFunctions";
 
 function createData(month, amount) {
@@ -56,25 +50,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const clientsNames = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
+  createClientsData(0, 'Oliver Hansen'),
+  createClientsData(1, 'Van Henry'),
+  createClientsData(2, 'April Tucker'),
+  createClientsData(3, 'Ralph Hubbard'),
+  createClientsData(4, 'Omar Alexander')
 ];
+
+function createClientsData(id, name) {
+  return {id, name};
+}
 
 
 export default function AvgClientAmountInComplainForFriend() {
   const theme = useTheme();
   const classes = useStyles();
-  const [clientName, setClientName] = React.useState(clientsNames[0]);
+  const [clientsList, setClientsList] = React.useState(clientsNames);
+  const [clientName, setClientName] = React.useState(clientsList[0]);
+  const [chartData, setChartData] = React.useState(data);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  fetch(`/get-clients`)
+    .then(response => response.json())
+    .then(clients => setClientsList(clients))
+    .catch(console.error);
+
+  function updateChart() {
+    fetch(`/find-average-number-of-clients-complained?X=${clientName}`)
+      .then(response => response.json())
+      .then(data => setChartData(data))
+      .catch(console.error);
+  }
 
   return (
     <React.Fragment>
@@ -90,7 +97,7 @@ export default function AvgClientAmountInComplainForFriend() {
               </Title>
               <ResponsiveContainer>
                 <LineChart
-                  data={data}
+                  data={chartData}
                   margin={{
                     top: 16,
                     right: 16,
@@ -126,13 +133,13 @@ export default function AvgClientAmountInComplainForFriend() {
                 <Box ml={2}>
                   <Select
                     labelId="client-select-label"
-                    defaultValue={clientName}
+                    defaultValue={clientName.name}
                     onChange={event => setClientName(event.target.value)}
                     input={<Input/>}
                     MenuProps={MenuProps}
                   >
-                    {clientsNames.map(name => (
-                      <MenuItem key={name} value={name} style={getSelectMenuItemsStyles(name, clientsNames, theme)}>
+                    {clientsList.map(({name}) => (
+                      <MenuItem key={name} value={name} style={getSelectMenuItemsStyles(name, clientsList, theme)}>
                         {name}
                       </MenuItem>
                     ))}
@@ -141,7 +148,7 @@ export default function AvgClientAmountInComplainForFriend() {
 
                 <Box>
                   <Grid item container xs={6} justify={"center"} alignItems={"center"}>
-                    <Button variant="outlined">
+                    <Button variant="outlined" onClick={updateChart}>
                       Apply
                     </Button>
                   </Grid>

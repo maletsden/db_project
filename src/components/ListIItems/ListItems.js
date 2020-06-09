@@ -20,11 +20,11 @@ export default function Orders({rows, labels, col_keys, title, actionElement=nul
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.map((row, index) => (
             <TableRow key={row.id}>
               {col_keys.map((key, index) => <TableCell key={index}>{row[key]}</TableCell>)}
               {actionElement && (
-                <TableCell align={"right"}>
+                <TableCell align={"right"} _row_index={index}>
                   {actionElement}
                 </TableCell>
               )}

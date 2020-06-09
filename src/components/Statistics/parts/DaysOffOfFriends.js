@@ -1,9 +1,10 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import {getTodayDataFormatted} from "../../../helpers/dataHelperFunctions";
-import Button from "@material-ui/core/Button";
+import {
+  Paper,
+  Grid,
+  TextField,
+  Button
+} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import ListItems from "../../ListIItems/ListItems";
 
@@ -42,9 +43,9 @@ function createData(id, date, number) {
 const daysOffRows = [
   createData(0, '2001-07-04', 322),
   createData(1, '2011-03-14', 124),
-  createData(1, '2009-11-25', 434),
-  createData(1, '2021-09-02', 12),
-  createData(1, '2011-03-14', 127),
+  createData(2, '2009-11-25', 434),
+  createData(3, '2021-09-02', 12),
+  createData(4, '2011-03-14', 127),
 ];
 
 
@@ -52,6 +53,13 @@ export default function DaysOffOfFriends() {
   const classes = useStyles();
   const [minFriendsAmount, setMinFriendsAmount] = React.useState(1);
   const [maxFriendsAmount, setMaxFriendsAmount] = React.useState(1);
+
+  // const [giftsList, setGiftsList] = React.useState(giftsRows);
+  //
+  // fetch(`/get-gifts?user-id=${user.id}`)
+  //   .then(response => response.json())
+  //   .then(list => setGiftsList(list))
+  //   .catch(console.error);
 
   return (
     <div>
@@ -92,3 +100,4 @@ export default function DaysOffOfFriends() {
     </div>
   );
 }
+

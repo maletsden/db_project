@@ -1,18 +1,19 @@
-
 import React from "react";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import {getTodayDataFormatted} from "../../../helpers/dataHelperFunctions";
-import Button from "@material-ui/core/Button";
+import {
+  Paper,
+  Grid,
+  InputLabel,
+  Button,
+  Select,
+  Input,
+  MenuItem
+} from "@material-ui/core";
 import {makeStyles, useTheme} from "@material-ui/core/styles";
 import ListItems from "../../ListIItems/ListItems";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import Box from "@material-ui/core/Box";
-import InputLabel from "@material-ui/core/InputLabel";
 import {getSelectMenuItemsStyles, MenuProps} from "../../../helpers/selectHelperFunctions";
+import clsx from "clsx";
+import TextField from "@material-ui/core/TextField";
+import {getTodayDataFormatted} from "../../../helpers/dataHelperFunctions";
 
 const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -58,39 +59,57 @@ const celebrationsRows = [
 ];
 
 const clientsNames = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
+  createClientsData(0, 'Oliver Hansen'),
+  createClientsData(1, 'Van Henry'),
+  createClientsData(2, 'April Tucker'),
+  createClientsData(3, 'Ralph Hubbard'),
+  createClientsData(4, 'Omar Alexander')
 ];
-
 
 const friendsNames = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
+  createClientsData(0, 'Oliver Hansen'),
+  createClientsData(1, 'Van Henry'),
+  createClientsData(2, 'April Tucker'),
+  createClientsData(3, 'Ralph Hubbard'),
+  createClientsData(4, 'Omar Alexander')
 ];
 
+
+function createClientsData(id, name) {
+  return {id, name};
+}
 export default function Commoncelebrations() {
   const classes = useStyles();
   const theme = useTheme();
 
-  const [friendName, setFriendName] = React.useState(clientsNames[0]);
-  const [clientName, setClientName] = React.useState(clientsNames[0]);
+  const [clientsList, setClientsList] = React.useState(clientsNames);
+  const [friendsList, setFriendsList] = React.useState(clientsNames);
 
+  const [fromDate, setFromDate] = React.useState(getTodayDataFormatted({changeMonth: -1}));
+  const [tillDate, setTillDate] = React.useState(getTodayDataFormatted({}));
+
+  fetch(`/get-clients`)
+    .then(response => response.json())
+    .then(clients => setClientsList(clients))
+    .catch(console.error);
+
+  fetch(`/get-friends`)
+    .then(response => response.json())
+    .then(friends => setFriendsList(friends))
+    .catch(console.error);
+
+
+  const [friendName, setFriendName] = React.useState(clientsList[0]);
+  const [clientName, setClientName] = React.useState(friendsList[0]);
+
+
+  function filterCelebrations() {
+    fetch(`/find-shared-events?X=${user.id}&client_id=${minMeetingsAmount}&F=${fromDate}&T=${tillDate}`)
+      .then(response => response.json())
+      .then(clients => setClientsList(clients))
+      .catch(console.error);
+
+  }
   return (
     <div>
 
@@ -108,8 +127,8 @@ export default function Commoncelebrations() {
                 input={<Input/>}
                 MenuProps={MenuProps}
               >
-                {clientsNames.map(name => (
-                  <MenuItem key={name} value={name} style={getSelectMenuItemsStyles(name, clientsNames, theme)}>
+                {clientsNames.map(({name}, index) => (
+                  <MenuItem key={index} value={index} style={getSelectMenuItemsStyles(name, clientsNames, theme)}>
                     {name}
                   </MenuItem>
                 ))}
@@ -126,15 +145,31 @@ export default function Commoncelebrations() {
                 input={<Input/>}
                 MenuProps={MenuProps}
               >
-                {friendsNames.map(name => (
-                  <MenuItem key={name} value={name} style={getSelectMenuItemsStyles(name, clientsNames, theme)}>
+                {friendsNames.map(({name}, index) => (
+                  <MenuItem key={index} value={index} style={getSelectMenuItemsStyles(name, clientsNames, theme)}>
                     {name}
                   </MenuItem>
                 ))}
               </Select>
             </Grid>
-            <Grid item container xs={3} justify={"flex-end"} alignItems={"center"}>
-              <Button variant="outlined">
+            <Grid item xs={2}>
+              <TextField
+                label="From date"
+                type="date"
+                value={fromDate}
+                onChange={event => setFromDate(event.target.value)}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <TextField
+                label="Till date"
+                type="date"
+                value={tillDate}
+                onChange={event => setTillDate(event.target.value)}
+              />
+            </Grid>
+            <Grid item container xs={2} justify={"flex-end"} alignItems={"center"}>
+              <Button variant="outlined" onClick={filterCelebrations}>
                 Apply
               </Button>
             </Grid>

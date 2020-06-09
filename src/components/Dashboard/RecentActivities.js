@@ -1,5 +1,7 @@
 import React from 'react';
 import ListItems from "../ListIItems/ListItems";
+import {getUser} from "../../reducers";
+import {connect} from "react-redux";
 
 const celebrationsLabels = [
   'Date',
@@ -27,8 +29,22 @@ const celebrationsRows = [
   createData(2, 'garden', '2045 Cesar Trail Suite 658', 'Neighborhood', '1977-01-03'),
   createData(3, 'open area', '98662 Aufderhar Dam Apt. 749', 'Pajama Party', '1982-04-16')
 ];
-export default function RecentActivities() {
+
+function RecentActivities({user}) {
+  const [activitiesList, setActivitiesList] = React.useState(celebrationsRows);
+
+  fetch(`/get-recent-activities?user-id=${user.id}`)
+    .then(response => response.json())
+    .then(list => setActivitiesList(list))
+    .catch(console.error);
+
   return (
-    <ListItems rows={celebrationsRows} labels={celebrationsLabels} col_keys={celebrationsColKeys} title="Recent Celebrations"/>
+    <ListItems rows={activitiesList} labels={celebrationsLabels} col_keys={celebrationsColKeys} title="Recent Celebrations"/>
   );
 }
+
+const mapStateToProps = state => ({
+  user: getUser(state)
+});
+
+export default connect(mapStateToProps)(RecentActivities);
