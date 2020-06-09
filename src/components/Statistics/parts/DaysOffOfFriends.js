@@ -54,13 +54,17 @@ export default function DaysOffOfFriends() {
   const [minFriendsAmount, setMinFriendsAmount] = React.useState(1);
   const [maxFriendsAmount, setMaxFriendsAmount] = React.useState(1);
 
-  // const [giftsList, setGiftsList] = React.useState(giftsRows);
-  //
-  // fetch(`/get-gifts?user-id=${user.id}`)
-  //   .then(response => response.json())
-  //   .then(list => setGiftsList(list))
-  //   .catch(console.error);
+  const [daysOff, setDaysOff] = React.useState(daysOffRows);
 
+  React.useEffect(() => filterData(), []);
+
+
+  function filterData() {
+    fetch(`/find-days-off-for-friends-of-client?A=${minFriendsAmount}&B=${maxFriendsAmount}`)
+      .then(response => response.json())
+      .then(data => setDaysOff(data))
+      .catch(console.error);
+  }
   return (
     <div>
 
@@ -82,7 +86,7 @@ export default function DaysOffOfFriends() {
               />
             </Grid>
             <Grid item container xs={3} justify={"flex-end"} alignItems={"center"}>
-              <Button variant="outlined">
+              <Button variant="outlined" onClick={filterData}>
                 Apply
               </Button>
             </Grid>
@@ -93,7 +97,7 @@ export default function DaysOffOfFriends() {
 
       <Grid item xs={12}>
         <Paper className={classes.paper}>
-          <ListItems rows={daysOffRows} labels={daysOffLabels} col_keys={daysOffColKeys}
+          <ListItems rows={daysOff} labels={daysOffLabels} col_keys={daysOffColKeys}
                      title="Dates when friends have days off"/>
         </Paper>
       </Grid>

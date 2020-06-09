@@ -12,6 +12,7 @@
 # production
 /build
 /templates
+static
 
 # misc
 .DS_Store

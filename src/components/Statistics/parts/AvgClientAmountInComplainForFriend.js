@@ -82,8 +82,6 @@ export default function AvgClientAmountInComplainForFriend() {
     fetch(`/get-clients`)
       .then(response => response.json())
       .then(clients => {
-        console.log(clients)
-
         setClientsList(clients);
         setClientName(clients[0]);
       })

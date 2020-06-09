@@ -347,7 +347,6 @@ def find_shared_events():
 @app.route('/find-days-off-for-friends-of-client')
 def find_days_off_for_friends_of_client():
     try:
-        cur.execute(CREATE_VIEW)
         cur.execute(FIND_DAYS_OFF_FOR_FRIENDS, [request.values[s] for s in ('A', 'B')])
         results = cur.fetchall()
         for result in results:

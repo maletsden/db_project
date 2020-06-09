@@ -66,7 +66,7 @@ FIND_SHARED_EVENTS = """SELECT celebrations.id
 FROM friends_groups INNER JOIN celebrations ON (friends_groups.group_id = celebrations.friends_group_id)
 WHERE friends_groups.friend_id = (%s) AND celebrations.client_id = (%s) AND celebrations.date >= (%s) AND celebrations.date <= (%s)"""
 # 11
-FIND_DAYS_OFF_FOR_FRIENDS = """SELECT date, COUNT(*) as num
+FIND_DAYS_OFF_FOR_FRIENDS = """SELECT date, COUNT(*) as number
 FROM day_off
 GROUP BY date
 HAVING COUNT(*) >= (%s) AND COUNT(*) <= (%s)"""
