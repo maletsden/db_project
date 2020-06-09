@@ -5,12 +5,14 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import {makeStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from "../Copyright/Copyright";
+import {connect} from "react-redux";
+import {login} from "../../actions";
+import { withRouter } from 'react-router-dom';
 
-
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -28,71 +30,128 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}));
+});
 
-async function login(event) {
-  console.log(event);
-  event.preventDefault();
 
-  const response = await fetch('/verify-singin');
-  const data = await response.json();
+const userRoles = {
+  'client': true,
+  'friend': true
+};
 
-  if (typeof data == "string") return false;
+class SignIn extends React.Component {
+  constructor(props) {
+    super(props);
 
-  console.log(data);
-  return false;
+    this.state = {
+      email: '',
+      password: '',
+      error: false
+    };
+  }
+
+  updateEmail(email) {
+    this.setState({
+      ...this.state,
+      email
+    });
+  }
+
+  updatePassword(password) {
+    this.setState({
+      ...this.state,
+      password
+    });
+  }
+
+  singIn() {
+    const data = {
+      role: 'friend',
+      id: 0
+    };
+
+    // fetch(`/login?email=${this.state.email}&password=${this.state.password}`)
+    //   .then(response => response.json())
+    //   .then(data => {
+        if (!data.role) {
+          this.setState({
+            ...this.state,
+            error: true
+          });
+        } else if (data.role in userRoles) {
+          this.props.login(data);
+          const { history } = this.props;
+          if (history) history.push(`${data.role}/dashboard`);
+        }
+      // })
+      // .catch(console.error);
+  }
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline/>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon/>
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form} noValidate>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={this.state.email}
+              onChange={event => this.updateEmail(event.target.value)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={this.state.password}
+              onChange={event => this.updatePassword(event.target.value)}
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={e => {
+                e.preventDefault();
+                this.singIn()
+              }}
+            >
+              Sign In
+            </Button>
+          </form>
+        </div>
+
+        <Copyright/>
+      </Container>
+    );
+  }
 }
 
-export default function SignIn() {
-  const classes = useStyles();
+const mapStateToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+  login: item => dispatch(login(item))
+});
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline/>
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon/>
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate onSubmit={e => e.preventDefault() && login() && false}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-        </form>
-      </div>
-
-      <Copyright/>
-    </Container>
-  );
-}
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(SignIn)));

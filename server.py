@@ -32,8 +32,8 @@ def send_ico(path):
     return send_from_directory(STATIC_FILES_DIR, path + '.ico')
 
 
-@app.route('/verify-singin')
-def verify_signin():
+@app.route('/login')
+def login():
     email = request.values["email"]
     password = request.values["password"]
     h = hashlib.md5(password.encode())
@@ -41,13 +41,20 @@ def verify_signin():
     cur.execute(CHECK_PASSWORD, (email, email, email))
     results = cur.fetchall()
     print(results)
-    if len(results) > 0:
-        if hashed_password == results[0]["password"]:
-            return '{{"verify-signin": "{0}"}}'.format(results[0]["role"])
-        else:
-            return '{"verify-signin": "false"}'
-    else:
-        return '{"verify-signin": "false"}'
+
+    result = {
+      "role": None,
+      "id": None
+    }
+    if len(results) > 0 and hashed_password == results[0]["password"]:
+        result["role"] = results[0]["role"]
+        # TODO: get id
+        result["id"] = None
+    return result
+
+#TODO: /get-recent-activities
+#TODO: /get-user-total-rents
+#TODO: /get-rents-by-last-12-month
 
 @app.route('/get-gifts')
 def get_gifts():
@@ -60,6 +67,7 @@ def get_gifts():
         return "Wrong query"
 
 
+#TODO: get friend by user id (need 2 variants)
 @app.route('/get-friends')
 def get_friends():
     try:
@@ -70,7 +78,7 @@ def get_friends():
         print(e)
         return "Wrong query"
 
-
+#TODO: get clients by user id (need 2 variants)
 @app.route('/get-clients')
 def get_clients():
     try:
@@ -160,6 +168,7 @@ def take_day_off():
 
 # requests
 
+#TODO: please change all X, F, ... to words (X=user-id) since a bit confusing (only if there will be a time)
 # 1
 @app.route('/find-friends-of-client')
 def find_friends_of_client():
@@ -277,6 +286,7 @@ def find_friends_by_complaints():
         return "Wrong query"
 
 
+#TODO: missing parameters
 # 10
 @app.route('/find-shared-events')
 def find_shared_events():
