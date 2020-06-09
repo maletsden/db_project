@@ -6,6 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {getTodayDataFormatted} from "../../helpers/dataHelperFunctions";
+import {getUser} from "../../reducers";
+import {connect} from "react-redux";
 
 // Generate Order Data
 function createData(id, full_name, age, sex) {
@@ -44,10 +46,27 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-function RentAFriend() {
+function RentAFriend({user}) {
   const classes = useStyles();
   const [minMeetingsAmount, setMinMeetingsAmount] = React.useState(1);
   const [minGroupAmount, setMinGroupAmount] = React.useState(1);
+  const [friendsList, setFriendsList] = React.useState(rows);
+
+  React.useEffect(() => {
+    fetch(`/get-friends`)
+      .then(response => response.json())
+      .then(list => setFriendsList(list))
+      .catch(console.error);
+  }, []);
+
+  function rentFriend(event) {
+      const rowIndex = +event.target.parentNode.parentNode.attributes._row_index.value;
+      const {id} = friendsList[rowIndex];
+
+      fetch(`/rent-friend?friend_id=${id}&client_id=${user.id}&date=${'2020-06-09'}&location_id=${1}`)
+      .then(response => response.json())
+      .catch(console.error);
+  }
 
   return (
     <div>
@@ -123,9 +142,9 @@ function RentAFriend() {
 
       <Grid item xs={12}>
         <Paper className={classes.paper}>
-          <ListItems rows={rows} labels={labels} col_keys={col_keys} title="Friends"
+          <ListItems rows={friendsList} labels={labels} col_keys={col_keys} title="Friends"
                      actionElement={(
-                       <Button variant="outlined">
+                       <Button variant="outlined" onClick={rentFriend}>
                          Invite
                        </Button>
                      )}
@@ -136,4 +155,8 @@ function RentAFriend() {
   );
 }
 
-export default RentAFriend;
+const mapStateToProps = state => ({
+  user: getUser(state)
+});
+
+export default connect(mapStateToProps)(RentAFriend);

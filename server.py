@@ -8,8 +8,8 @@ import hashlib
 import json
 
 
-# db = "dbname=%s user=%s password=%s host=%s port=%s" % ("db2", "team2", "pass2word", "142.93.163.88", "6006")
-db = "dbname=%s user=%s password=%s host=%s" % ("friends_rental", "postgres", "postgres", "localhost")
+db = "dbname=%s user=%s password=%s host=%s port=%s" % ("db2", "team2", "pass2word", "142.93.163.88", "6006")
+# db = "dbname=%s user=%s password=%s host=%s" % ("friends_rental", "postgres", "postgres", "localhost")
 conn = psycopg2.connect(db)
 cur = conn.cursor(cursor_factory=RealDictCursor)
 app = Flask(__name__)
@@ -174,20 +174,21 @@ def get_client_groups():
 
 @app.route('/rent-friend', methods=['GET', 'POST'])
 def rent_friend():
+    print([request.values[s] for s in ("friend_id", "client_id", "date", "location_id")])
     cur.execute(RENT_FRIEND, [request.values[s] for s in ("friend_id", "client_id", "date", "location_id")])
-    return 0
+    return 'returned'
 
 
 @app.route('/rent-group', methods=['POST'])
 def rent_group():
     cur.execute(RENT_GROUP, [request.values[s] for s in ("friends_group_id", "holiday_id", "friends_number", "client_id", "location_id", "style", "equipment", "date")])
-    return 0
+    return 'returned'
 
 
 @app.route('/send-gift', methods=['POST'])
 def send_gift():
     cur.execute(SEND_GIFT, [request.values[s] for s in ("gift_id", "client_id", "friend_id", "date")])
-    return 0
+    return 'returned'
 
 
 @app.route('/return-gift', methods=['GET', 'POST'])
@@ -200,13 +201,13 @@ def return_gift():
 @app.route('/add-complaint', methods=['POST'])
 def add_complaint():
     cur.execute(ADD_COMPLAINT, [request.values[s] for s in ("clients_group_id", "friend_id", "text", "date", "clients_number")])
-    return 0
+    return 'returned'
 
 
 @app.route('/take-day-off', methods=['POST'])
 def take_day_off():
     cur.execute(TAKE_DAY_OFF, [request.values[s] for s in ("friend_id", "date")])
-    return 0
+    return 'returned'
 
 
 # requests
